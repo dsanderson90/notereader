@@ -4,8 +4,8 @@ function NoteReader() {
     useEffect(() => {
       const onDown = event => {
         const { key } = event
-        if(!isNaN(key)) {
-          key === 0 ? setNote(notes[10]) :
+        if(!isNaN(key) || key === '`') {
+          key === 0 ? setNote(notes[10]) : key === '`' ? console.log(key) :
           setNote(notes[key])
         }
         }
