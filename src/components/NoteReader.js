@@ -1,37 +1,34 @@
 import React, { useState, useEffect } from 'react';
 
 function NoteReader() {
-    useEffect(() => {
-      const onDown = event => {
-        const { key } = event
-        if(!isNaN(key) || key === '`') {
-          key === 0 ? setNote(notes[10]) : key === '`' ? console.log(key) :
-          setNote(notes[key])
-        }
-        }
-      window.addEventListener('keydown', onDown);
-      return () => {
-        window.removeEventListener('keydown', onDown);
-      };
-    }, []);
-
+  useEffect(() => {
+    const onDown = event => {
+      const { key } = event;
+      const res = notes.filter(note => note.key === key);
+      res.length > 0 && setNote(res[0].note);
+    };
+    window.addEventListener('keydown', onDown);
+    return () => {
+      window.removeEventListener('keydown', onDown);
+    };
+  }, []);
 
   const [notes, setNotes] = useState([
-    'b4',
-    'c4',
-    'd4',
-    'e4',
-    'f4',
-    'g4',
-    'a5',
-    'b5',
-    'c5',
-    'd5',
-    'e5',
-    'f5',
-    'g5',
-    'a6',
-    'b6',
+    { key: '`', note: 'b4' },
+    { key: '1', note: 'c4' },
+    { key: '2', note: 'd4' },
+    { key: '3', note: 'e4' },
+    { key: '4', note: 'f4' },
+    { key: '5', note: 'g4' },
+    { key: '6', note: 'a5' },
+    { key: '7', note: 'b5' },
+    { key: '8', note: 'c5' },
+    { key: '9', note: 'd5' },
+    { key: '-', note: 'e5' },
+    { key: '=', note: 'f5' },
+    { key: 'q', note: 'g5' },
+    { key: 'w', note: 'a6' },
+    { key: 'e', note: 'b6' },
   ]);
   const [note, setNote] = useState('c5');
   const handleClick = e => {
@@ -43,7 +40,7 @@ function NoteReader() {
       type='button'
       className='btn'
       key={idx}
-      value={note}
+      value={note.note}
       onClick={handleClick}
     ></input>
   ));
