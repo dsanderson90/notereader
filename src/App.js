@@ -1,9 +1,9 @@
 import React from 'react'
 import './App.css';
-import NoteReader from './components/NoteReader';
+import Composer from './components/Composer';
 function App() {
   return (
-    <NoteReader />
+    <Composer />
   );
 
 }
