@@ -1,25 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
 function Composer() {
-
-  const noteFactory = (pitch, duration) => {
-    return {
-      pitch,
-      duration
-    }
-  }
-  // useEffect(() => {
-  //   const onDown = event => {
-  //     const { key } = event;
-  //     const res = notes.filter(note => note.key === key);
-  //     res.length > 0 && setNote(res[0].note);
-  //   };
-  //   window.addEventListener('keydown', onDown);
-  //   return () => {
-  //     window.removeEventListener('keydown', onDown);
-  //   };
-  // }, []);
-
   const [pitches, setPitches] = useState([
     { pitch: 'b4' },
     { pitch: 'c4' },
@@ -45,24 +26,45 @@ function Composer() {
     { dur: 'half-note-spacer' },
   ]);
 
-  const [isOpened, setIsOpened] = useState(false)
+  const [isOpened, setIsOpened] = useState(false);
+  const [currentNote, setCurrentNote] = useState({ pitch: '', duration: '' });
 
-
-  const [currentNote, setCurrentNote] = useState({ pitch: '', duration: '' })
-
-
-  const [score, setScore] = useState([])
+  const [score, setScore] = useState([
+    [
+      <div className={'c4 quarter-note'}></div>,
+      <div className={'d4 quarter-note'}></div>,
+      <div className={'e4 quarter-note'}></div>,
+      <div className={'f4 quarter-note'}></div>,
+    ],
+    [
+      <div className={'g4 quarter-note'}></div>,
+      <div className={'a5 quarter-note'}></div>,
+      <div className={'b5 quarter-note'}></div>,
+    ],
+  ]);
 
   const handleClick = e => {
     const { value } = e.target;
     const len = value.length;
-    return len > 2 ? setCurrentNote({ ...currentNote, duration: value }) : len <= 2 ? setCurrentNote({ ...currentNote, pitch: value }) : '';
-
-  }
+    return len > 2
+      ? setCurrentNote({ ...currentNote, duration: value })
+      : len <= 2
+      ? setCurrentNote({ ...currentNote, pitch: value })
+      : '';
+  };
 
   const handleAddNote = () => {
-setScore([...score,  <div className={`${currentNote.pitch} ${currentNote.duration}`}></div>])
+    let currentIdx = score.length - 1 // find the last nested array
+    //push to last array if the last nested arrays length < 4
+    if(score[currentIdx].length < 4) {
+    setScore([
+      ...score,
+      score[currentIdx].push(<div className={`${currentNote.pitch} ${currentNote.duration}`}></div>)
+    ])
   }
+    console.log(score)
+    //create new array if array is filled
+  };
 
   const toggleOpen = e => {
     setIsOpened(!isOpened);
@@ -87,22 +89,36 @@ setScore([...score,  <div className={`${currentNote.pitch} ${currentNote.duratio
       onClick={handleClick}
     ></input>
   ));
-const music = score.map(n => n)
+  const music = score.map(measure => {
+    let output = <div className="bar">{measure.map(el => el)}<div className="bar-line"></div></div>
+   return output
+  });
 
   return (
     <div className='App'>
-      <div className='sheet-music'>
-        <div className='bar'>
-          <div className='stave-header'></div>
-      {music}
-          <div className='bar-line'></div>
-        </div>
+      <div className='sheet-music'>{music}</div>
+
+      <div id='noteSelected'>
+        {currentNote.pitch} {currentNote.duration}
       </div>
-      {currentNote.pitch} {currentNote.duration}
       <div className='container'>
-        {isOpened && <div>{durationBtns} {pitchBtns} </div>}
-        {!isOpened ? <button onClick={toggleOpen}>+</button> : <button onClick={toggleOpen}>-</button>}
-        <button onClick={handleAddNote}>Add Note</button>
+        {isOpened && (
+          <div>
+            {durationBtns} {pitchBtns}
+          </div>
+        )}
+        {!isOpened ? (
+          <button className='btn' onClick={toggleOpen}>
+            +
+          </button>
+        ) : (
+          <button className='btn' onClick={toggleOpen}>
+            -
+          </button>
+        )}
+        <button className='btn' onClick={handleAddNote}>
+          Add Note
+        </button>
       </div>
     </div>
   );
