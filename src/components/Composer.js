@@ -31,15 +31,15 @@ function Composer() {
 
   const [score, setScore] = useState([
     [
-      <div className={'c4 quarter-note'}></div>,
-      <div className={'d4 quarter-note'}></div>,
-      <div className={'e4 quarter-note'}></div>,
-      <div className={'f4 quarter-note'}></div>,
+      'c4 quarter-note',
+      'd4 quarter-note',
+      'e4 quarter-note',
+      'f4 quarter-note',
     ],
     [
-      <div className={'g4 quarter-note'}></div>,
-      <div className={'a5 quarter-note'}></div>,
-      <div className={'b5 quarter-note'}></div>,
+      'g4 quarter-note',
+      'a5 quarter-note',
+      'b5 quarter-note',
     ],
   ]);
 
@@ -57,12 +57,15 @@ function Composer() {
     let currentIdx = score.length - 1 // find the last nested array
     //push to last array if the last nested arrays length < 4
     if(score[currentIdx].length < 4) {
+      console.log('1')
     setScore([
       ...score,
-      score[currentIdx].push(<div className={`${currentNote.pitch} ${currentNote.duration}`}></div>)
+      `${currentNote.pitch} ${currentNote.duration}`
     ])
   }
-    console.log(score)
+  else {
+
+  }
     //create new array if array is filled
   };
 
@@ -90,7 +93,7 @@ function Composer() {
     ></input>
   ));
   const music = score.map(measure => {
-    let output = <div className="bar">{measure.map(el => el)}<div className="bar-line"></div></div>
+    let output = <div className="bar">{measure.map(el => <div className={el}></div>)}<div className="bar-line"></div></div>
    return output
   });
 
