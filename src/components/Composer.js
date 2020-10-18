@@ -30,16 +30,6 @@ function Composer() {
   const [currentNote, setCurrentNote] = useState({ pitch: "", duration: "" });
 
   const [score, setScore] = useState([
-    [
-      "c4 quarter-note",
-      "d4 quarter-note",
-      "e4 quarter-note",
-      "f4 quarter-note",
-    ],
-    ["g4 quarter-note", "a5 quarter-note", "b5 quarter-note"],
-  ]);
-
-  const [score2, setScore2] = useState([
     {
       measure: 1,
       notes: [
@@ -65,22 +55,23 @@ function Composer() {
   };
 
   const handleAddNote = () => {
-    let currentIdx = score2.length - 1; // find the last nested array
+    let currentIdx = score.length - 1; // find the last nested array
     //push to last array if the last nested arrays length < 4
-    console.log(score2[currentIdx]);
-    if (score2[currentIdx].notes.length < 4) {
-      const newScore = [...score2];
-      newScore[currentIdx].notes = [...newScore[currentIdx].notes, `${currentNote.pitch} ${currentNote.duration}`]
-      setScore2(newScore);
-    } else {
-      setScore2([
-        ...score2,
-        {
-          measure: currentIdx + 1,
-          notes: [`${currentNote.pitch} ${currentNote.duration}`],
-        },
-      ]);
-    }
+if(currentNote.pitch && currentNote.duration) {
+  if (score[currentIdx].notes.length < 4) {
+    const newScore = [...score];
+    newScore[currentIdx].notes = [...newScore[currentIdx].notes, `${currentNote.pitch} ${currentNote.duration}`]
+    setScore(newScore);
+  } else {
+    setScore([
+      ...score,
+      {
+        measure: currentIdx + 1,
+        notes: [`${currentNote.pitch} ${currentNote.duration}`],
+      },
+    ]);
+  }
+}
     //create new array if array is filled
   };
 
@@ -109,11 +100,14 @@ function Composer() {
   ));
 
 
-  const music = score2.map(({measure, notes}) => {
+  const music = score.map(({measure, notes}) => {
     let output = (
       <div key={measure} className="bar">
         {notes.map((el) => (
-          <div className={el}></div>
+          <div onMouseOver={e => {
+            let [ pitch, duration ] = el.split(' ')
+            setCurrentNote({pitch, duration})
+          }} className={el}></div>
         ))}
         <div className="bar-line"></div>
       </div>
